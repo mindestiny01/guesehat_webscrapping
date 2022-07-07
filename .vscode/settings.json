@@ -1,0 +1,7 @@
+{
+    "terminal.integrated.fontSize": 12,
+    "terminal.integrated.fontWeight": "bold",
+    "terminal.integrated.tabs.location": "right",
+    "editor.fontSize": 12,
+    "editor.fontWeight": "bold"
+}

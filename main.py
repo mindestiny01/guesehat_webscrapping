@@ -2,7 +2,6 @@ from string import ascii_lowercase as UC
 from bs4 import BeautifulSoup
 import requests
 import pandas as pd
-# import csv
 
 # Global Variable of Google Chrome
 HEADERS = {'user-agent' : 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36'}
@@ -47,36 +46,41 @@ for letter in UC:
                         pref_url = requests.get(str(link), headers = HEADERS)
                         pref_soup = BeautifulSoup(pref_url.content, 'html.parser')
 
-                        # Get the Medicine Name
+                        # Get the HTML tag of Medicine Name 
                         __med_name = pref_soup.find('h1', {'class' : 'disdetail-head-title'})
 
                         # Check if the page is not visible for name, 
-                        # otherwise get the medicine name and casting to a list
+                        # otherwise get the medicine name as a plain text
                         if __med_name is None: continue
-                        else : __med_name = [pref_soup.find('h1', {'class' : 'disdetail-head-title'}).text]
+                        else : name  = __med_name.text 
 
-                        # Get the first paragraph of medicine description
-                        __desc = pref_soup.find('div', {'class' : 'obat-group-head clearfix'})
+                        # Get the all <div> tag of paragraph
+                        __medicine_desc_list = pref_soup.find_all('div', {'class' : 'obat-group-head clearfix'})
 
                         # Check if the page is not visible for description, 
-                        # otherwise replace specific word with empty string,
-                        # and casting to a list 
-                        if __desc is None: continue
-                        else: __desc_fix = [__desc.text.replace('Penggunaan', '')]
+                        # otherwise take every related paragraph to the new variable
+                        if __medicine_desc_list is None: continue
+                        else:
+                                __overview = __medicine_desc_list[0].text
+                                __how_works = __medicine_desc_list[1].text
+                                __side_effects = __medicine_desc_list[2].text
+                                __how_use = __medicine_desc_list[3].text
+                                __dose = __medicine_desc_list[4].text
                         
-                        # This for making the name and Description are side-by-side inside the list
                         # And append all of it in to the list
-                        get_zip = zip(__med_name, __desc_fix)
-                        for name, desc in get_zip: 
-                                Medicine_Full = {
-                                        'Medicine Name' : name,
-                                        'Description' : desc
-                                }
-                                medicine_list.append(Medicine_Full); break
+                        Medicine_Full = {
+                                'Name' : name,
+                                'Overview' : __overview,
+                                'Works' : __how_works,
+                                'Effects' : __side_effects,
+                                'Use' : __how_use,
+                                'Dose': __dose
+                        }
+                        medicine_list.append(Medicine_Full); break
 
-## Another option to create csv file
+## Create csv file
 df = pd.DataFrame(medicine_list)
-df.to_csv('data/medicine_info_2.csv')
+df.to_csv('data/indonesian_medicine_dataset.csv')
 print('Ready to Use')
 
 
