@@ -62,19 +62,33 @@ for letter in UC:
                         if __medicine_desc_list is None: continue
                         else:
                                 __overview = __medicine_desc_list[0].text
+                                if __overview is None: continue
+                                else: __overview_fix = __overview.replace('Penggunaan', '')
+
                                 __how_works = __medicine_desc_list[1].text
+                                if __how_works is None: continue
+                                else: __how_works_fix = __how_works.replace('Cara Kerja Obat' , '')
+
                                 __side_effects = __medicine_desc_list[2].text
+                                if __how_works is None: continue
+                                else: __side_effects_fix = __side_effects.replace('Efek Samping', '')
+
                                 __how_use = __medicine_desc_list[3].text
+                                if __how_use is None: continue
+                                else: __how_use_fix = __how_use.replace('Pemakaian Obat', '')
+
                                 __dose = __medicine_desc_list[4].text
+                                if __dose is None: continue
+                                else: __dose_fix = __dose.replace('Dosis', '')
                         
                         # And append all of it in to the list
                         Medicine_Full = {
                                 'Name' : name,
-                                'Overview' : __overview,
-                                'Works' : __how_works,
-                                'Effects' : __side_effects,
-                                'Use' : __how_use,
-                                'Dose': __dose
+                                'Overview' : __overview_fix,
+                                'Works' : __how_works_fix,
+                                'Effects' : __side_effects_fix,
+                                'Use' : __how_use_fix,
+                                'Dose': __dose_fix
                         }
                         medicine_list.append(Medicine_Full); break
 
@@ -82,7 +96,3 @@ for letter in UC:
 df = pd.DataFrame(medicine_list)
 df.to_csv('data/indonesian_medicine_dataset.csv')
 print('Ready to Use')
-
-
-
-
